@@ -1,0 +1,18 @@
+mkdir pruebagithub
+cd pruebagithub/
+git config --global user.name "Leandro Peralta"
+git config --global user.email "yoleandro88@gmail.com"
+ssh-keygen 
+cat /home/leo/.ssh/id_rsa.pub
+git init
+
+touch README2
+git add README2 
+git status 
+
+git commit -m "este es mi primer archivo desde mi pc"
+git remote add origin git@github.com:olimpo88/prueba-de-github.git
+git pull origin master
+git push rigin master
+git push origin master
+
