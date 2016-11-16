@@ -9,7 +9,7 @@ class jsxc extends rcube_plugin
 	private $xmpp_overwrite=True;
 	private $jsxc_root="/";
 	private $jsxc_load_jquery=False;
-		
+
 
 	function init(){
 		$rcmail = rcmail::get_instance();
@@ -20,7 +20,7 @@ class jsxc extends rcube_plugin
 		$this->xmpp_overwrite = $rcmail->config->get('xmpp_overwrite');
 		$this->jsxc_root = $rcmail->config->get('jsxc_root');
 		$this->jsxc_load_jquery = $rcmail->config->get('jsxc_load_jquery');
-		
+
                 $this->add_hook('storage_connect', array($this, 'carga_chat'));
 	}
 
@@ -59,36 +59,18 @@ class jsxc extends rcube_plugin
                 ",'foot');
 
                 //Cargo las hojas CSS
-                $this->include_stylesheet('css/jquery/jquery-ui.min.css');
-                $this->include_stylesheet('css/jquery/jquery.mCustomScrollbar.css');
-                $this->include_stylesheet('css/jquery/jquery.colorbox.css');
+                $this->include_stylesheet('css/jquery-ui.min.css');
                 $this->include_stylesheet('css/jsxc.css');
-                $this->include_stylesheet('css/jsxc.webrtc.css');
 
                 //Cargo los archivos JS
 		if ($this->jsxc_load_jquery){
-                	$this->include_script('js/jquery/jquery.min.js');
+                	$this->include_script('lib/jquery.min.js');
 		}
-                $this->include_script('js/jquery/jquery.ui.min.js');
-                $this->include_script('js/jquery/jquery.colorbox-min.js');
-                $this->include_script('js/jquery/jquery.slimscroll.js');
-                $this->include_script('js/jquery/jquery.fullscreen.js');
-                $this->include_script('js/strophe.jingle/strophe.js');
-                $this->include_script('js/strophe.jingle/strophe.muc.js');
-                $this->include_script('js/strophe.jingle/strophe.disco.js');
-                $this->include_script('js/strophe.jingle/strophe.caps.js');
-                $this->include_script('js/strophe.jingle/strophe.vcard.js');
-                $this->include_script('js/strophe.jingle/strophe.jingle.js');
-                $this->include_script('js/strophe.jingle/strophe.jingle.session.js');
-                $this->include_script('js/strophe.jingle/strophe.jingle.sdp.js');
-                $this->include_script('js/strophe.jingle/strophe.jingle.adapter.js');
-                $this->include_script('js/otr/build/dep/salsa20.js');
-                $this->include_script('js/otr/build/dep/bigint.js');
-                $this->include_script('js/otr/build/dep/crypto.js');
-                $this->include_script('js/otr/build/dep/eventemitter.js');
-                $this->include_script('js/otr/build/otr.js');
-                $this->include_script('js/jsxc/jsxc.lib.js');
-                $this->include_script('js/jsxc/jsxc.lib.webrtc.js');
+                $this->include_script('lib/jquery.ui.min.js');
+                $this->include_script('lib/jquery.slimscroll.js');
+                $this->include_script('lib/jquery.fullscreen.js');
+                $this->include_script('lib/jsxc.dep.js');
+                $this->include_script('jsxc.min.js');
 	}
 
 	function carga_chat($args) {
