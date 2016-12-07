@@ -31,6 +31,11 @@ class jsxc extends rcube_plugin
         $this->include_stylesheet('css/jquery-ui.min.css');
         $this->include_stylesheet('css/jsxc.css');
 
+        // Load custom CSS stylesheet if exists
+        if (stat('plugins/jsxc/css/jsxc.roundcube.css')) {
+            $this->include_stylesheet('css/jsxc.roundcube.css');
+        }
+
         // Load JS modules
         if ($this->jsxc_load_jquery) {
             $this->include_script('lib/jquery.min.js');
