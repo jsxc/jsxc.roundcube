@@ -73,6 +73,9 @@ class jsxc extends rcube_plugin
         switch($args['template']) {
 
             case 'login':
+                $this->load_jsxc();
+                break;
+
             case 'mail':
             case 'compose':
             case 'addressbook':
@@ -82,6 +85,21 @@ class jsxc extends rcube_plugin
             case 'responses':
             case 'about':
                 $this->load_jsxc();
+                $this->api->output->add_script("
+                    $('.button-logout').each(function(i, b) {
+                        var onclick = b.onclick;
+                        b.onclick = function(e) {
+                            e.stopPropagation();
+                            e.preventDefault();
+                            if (jsxc.xmpp.conn != null) {
+                                $(document).on('disconnected.jsxc', onclick);
+                                jsxc.xmpp.logout(true);
+                            } else {
+                                onclick();
+                            }
+                        }
+                    });
+                ", 'foot');
                 break;
 
         }
