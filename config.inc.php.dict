@@ -1,9 +1,0 @@
-<?php
-$config['xmpp_bosh_url']='http://IP:PORT/http-bind/';
-$config['xmpp_domain']='DOMAIN';
-$config['xmpp_resource']='web';
-$config['xmpp_overwrite']='true';
-
-$config['jsxc_root']="/";
-$config['jsxc_load_jquery']=False;
-?>

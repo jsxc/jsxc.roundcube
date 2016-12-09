@@ -2,24 +2,23 @@
 class jsxc extends rcube_plugin
 {
     private $rcmail;
-    private $xmpp_domain="";
-    private $xmpp_resource="";
-    private $xmpp_overwrite=True;
-    private $jsxc_root="/";
-    private $jsxc_load_jquery=False;
+    private $distconfig;
+    private $userconfig;
 
     function init() {
 
         $rcmail = rcmail::get_instance();
         $this->rcmail = $rcmail;
 
-        $this->load_config();
-        $this->xmpp_bosh_url = $rcmail->config->get('xmpp_bosh_url');
-        $this->xmpp_domain = $rcmail->config->get('xmpp_domain');
-        $this->xmpp_resource = $rcmail->config->get('xmpp_resource');
-        $this->xmpp_overwrite = $rcmail->config->get('xmpp_overwrite');
-        $this->jsxc_root = $rcmail->config->get('jsxc_root');
-        $this->jsxc_load_jquery = $rcmail->config->get('jsxc_load_jquery');
+        if ($this->load_config()) {
+            $this->userconfig = json_encode($rcmail->config->get('jsxc'));
+        } else {
+            $this->rcmail->write_log("jsxc", "Warning: config.inc.php not found, not loading JSXC");
+            return;
+        }
+
+        $this->load_config('config.inc.php.dist');
+        $this->distconfig = json_encode($rcmail->config->get('jsxc'));
 
         $this->add_hook('render_page', array($this, 'on_render_page'));
 
@@ -32,14 +31,11 @@ class jsxc extends rcube_plugin
         $this->include_stylesheet('css/jsxc.css');
 
         // Load custom CSS stylesheet if exists
-        if (stat('plugins/jsxc/css/jsxc.roundcube.css')) {
+        if (stat($this->home.'/css/jsxc.roundcube.css')) {
             $this->include_stylesheet('css/jsxc.roundcube.css');
         }
 
         // Load JS modules
-        if ($this->jsxc_load_jquery) {
-            $this->include_script('lib/jquery.min.js');
-        }
         $this->include_script('lib/jquery.ui.min.js');
         $this->include_script('lib/jquery.slimscroll.js');
         $this->include_script('lib/jquery.fullscreen.js');
@@ -47,27 +43,11 @@ class jsxc extends rcube_plugin
         $this->include_script('jsxc.min.js');
 
         $this->api->output->add_script("
-
             $(function() {
-                jsxc.init({
-                    loginForm: {
-                        form: '#login-form > div > form',
-                        jid: '#rcmloginuser',
-                        pass: '#rcmloginpwd'
-                    },
-                    rosterAppend: 'body',
-                    root: '".$this->jsxc_root."plugins/jsxc',
-                    displayRosterMinimized: function() {
-                        return true;
-                    },
-                    xmpp: {
-                        url: '".$this->xmpp_bosh_url."',
-                        domain: '".$this->xmpp_domain."',
-                        resource: '".$this->xmpp_resource."',
-                        overwrite: ".$this->xmpp_overwrite.",
-                        onlogin: false
-                    }
-                });
+                var distconfig = ".$this->distconfig.";
+                var userconfig = ".$this->userconfig.";
+                var config = $.extend(true, distconfig, userconfig);
+                jsxc.init(config);
             });
         ", 'foot');
 
