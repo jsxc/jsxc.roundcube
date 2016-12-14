@@ -21,6 +21,7 @@ class jsxc extends rcube_plugin
         $this->distconfig = json_encode($rcmail->config->get('jsxc'));
 
         $this->add_hook('render_page', array($this, 'on_render_page'));
+        $this->register_action('plugin.jsxc.turn', array($this, 'turn_request_handler'));
 
     }
 
@@ -42,14 +43,29 @@ class jsxc extends rcube_plugin
         $this->include_script('lib/jsxc.dep.min.js');
         $this->include_script('jsxc.min.js');
 
-        $this->api->output->add_script("
+        $script = "
             $(function() {
                 var distconfig = ".$this->distconfig.";
                 var userconfig = ".$this->userconfig.";
-                var config = $.extend(true, distconfig, userconfig);
+                var config = $.extend(true, distconfig, userconfig);";
+
+        $turnconfig = $this->rcmail->config->get('turn');
+
+        if ($turnconfig) {
+            $script .= "
+                config.RTCPeerConfig = {
+                    ttl: " . $turnconfig['ttl'] . ",
+                    url: rcmail.url('plugin.jsxc.turn')
+                };
+            ";
+        }
+
+        $script .= "
                 jsxc.init(config);
             });
-        ", 'foot');
+        ";
+
+        $this->api->output->add_script($script, 'foot');
 
     }
 
@@ -88,6 +104,44 @@ class jsxc extends rcube_plugin
                 break;
 
         }
+
+    }
+
+    function turn_request_handler() {
+
+        $config = $this->rcmail->config->get('turn');
+
+        if (!$config) {
+            $this->rcmail->write_log("jsxc", "Warning: TURN credentials requested with TURN REST API not configured");
+            http_response_code(404);
+            exit;
+        }
+
+        $ttl = $config['ttl'];
+        $iceServers = array();
+
+        foreach ($config['servers'] as $server) {
+
+            $secret = $server['secret'];
+            $timestamp = time() + $ttl;
+            $username = $timestamp . ":" . $this->rcmail->user->get_username();
+            $password = base64_encode(hash_hmac("sha1", $username, $secret, true));
+
+            $iceServers[] = array(
+                "urls" => $server['urls'],
+                "username" => $username,
+                "credential" => $password
+            );
+
+        }
+
+        $turn = array(
+            "iceServers" => $iceServers
+        );
+
+        header("Content-Type: application/json");
+        echo rcmail_output_json::json_serialize($turn);
+        exit;
 
     }
 

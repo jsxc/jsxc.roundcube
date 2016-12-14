@@ -1,6 +1,8 @@
 <?php
 
-// JSXC configuration. The structure mirrors that of JSXC options (see jsxc.options.html).
+// JSXC configuration
+// ==================
+// The structure mirrors that of JSXC options (see jsxc.options.html).
 
 // RoundCube defaults for JSXC. You generally won't need to touch these.
 $config['jsxc'] = array(
@@ -28,6 +30,23 @@ $config['jsxc'] = array(
 //            array(
 //                'urls' => 'stun:stun.l.google.com:19302'
 //            )
+//        )
+//    )
+//);
+
+// TURN REST API configuration
+// ===========================
+// This is loosely based on this draft https://tools.ietf.org/html/draft-uberti-behave-turn-rest-00
+// If configured, this will override RTCPeerConfig above.
+// Shared secret is used to generate ephemeral credentials, which will be used
+// afterwards to authenticate with the TURN server.
+//
+//$config['turn'] = array(
+//    'ttl' => 86400,
+//    'servers' => array(
+//        array(
+//            urls => 'turn:turn.myserver.foo',
+//            secret => 'secret'
 //        )
 //    )
 //);
