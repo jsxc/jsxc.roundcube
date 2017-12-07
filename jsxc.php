@@ -28,7 +28,6 @@ class jsxc extends rcube_plugin
     function load_jsxc() {
 
         // Load CSS stylesheets
-        $this->include_stylesheet('css/jquery-ui.min.css');
         $this->include_stylesheet('css/jsxc.css');
 
         // Load custom CSS stylesheet if exists
@@ -37,7 +36,6 @@ class jsxc extends rcube_plugin
         }
 
         // Load JS modules
-        $this->include_script('lib/jquery.ui.min.js');
         $this->include_script('lib/jquery.slimscroll.js');
         $this->include_script('lib/jquery.fullscreen.js');
         $this->include_script('lib/jsxc.dep.min.js');
