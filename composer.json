@@ -9,7 +9,7 @@
     ],
     "homepage": "https://github.com/jsxc/jsxc.roundcube",
     "license": "MIT",
-    "version": "1.0",
+    "version": "3.3.2",
     "authors": [
         {
             "name": "Peralta Leandro",
@@ -19,7 +19,7 @@
         },
         {
             "name": "Dmitry Telegin",
-            "email": "mitya@acutus.pro",
+            "email": "dt@acutus.pro",
             "homepage": "https://github.com/dteleguin",
             "role": "Developer"
         }
