@@ -75,31 +75,25 @@ class jsxc extends rcube_plugin
                 $this->load_jsxc();
                 break;
 
-            case 'mail':
-            case 'compose':
-            case 'addressbook':
-            case 'settings':
-            case 'folders':
-            case 'identities':
-            case 'responses':
-            case 'about':
-                $this->load_jsxc();
-                $this->api->output->add_script("
-                    $('.button-logout').each(function(i, b) {
-                        var onclick = b.onclick;
-                        b.onclick = function(e) {
-                            e.stopPropagation();
-                            e.preventDefault();
-                            if (jsxc.xmpp.conn != null) {
-                                $(document).on('disconnected.jsxc', onclick);
-                                jsxc.xmpp.logout(true);
-                            } else {
-                                onclick();
+            default:
+                if (!$this->api->output->env['framed']) {
+                    $this->load_jsxc();
+                    $this->api->output->add_script("
+                        $('.button-logout').each(function(i, b) {
+                            var onclick = b.onclick;
+                            b.onclick = function(e) {
+                                e.stopPropagation();
+                                e.preventDefault();
+                                if (jsxc.xmpp.conn != null) {
+                                    $(document).on('disconnected.jsxc', onclick);
+                                    jsxc.xmpp.logout(true);
+                                } else {
+                                    onclick();
+                                }
                             }
-                        }
-                    });
-                ", 'foot');
-                break;
+                        });
+                    ", 'foot');
+                }
 
         }
 
